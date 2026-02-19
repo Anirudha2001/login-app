@@ -1,0 +1,148 @@
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Instrument+Sans:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --sky: #29b6f6;
+  --sky-dark: #0288d1;
+  --sky-light: #e1f5fe;
+  --accent-yellow: #ffe234;
+  --text-primary: #0f172a;
+  --text-muted: #64748b;
+  --card-bg: rgba(255,255,255,0.85);
+  --border: rgba(255,255,255,0.7);
+}
+
+html, body { height: 100%; }
+
+body {
+  font-family: 'Instrument Sans', sans-serif;
+  background: #dff1fb;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+/* ── Background animated blobs ── */
+.bg-scene {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(135deg, #cce9f9 0%, #e8f6ff 40%, #b3ddf5 100%);
+  overflow: hidden;
+}
+
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.55;
+  animation: drift 14s ease-in-out infinite alternate;
+}
+.blob-1 { width: 600px; height: 600px; background: #7dd3f8; top: -150px; left: -150px; animation-delay: 0s; }
+.blob-2 { width: 500px; height: 500px; background: #38bdf8; bottom: -100px; right: -80px; animation-delay: -5s; }
+.blob-3 { width: 350px; height: 350px; background: #bae6fd; top: 40%; left: 60%; animation-delay: -9s; }
+
+@keyframes drift {
+  0%   { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(40px, 30px) scale(1.08); }
+}
+
+/* ── Grid lines (subtle) ── */
+.bg-grid {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background-image:
+    linear-gradient(rgba(14,165,233,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(14,165,233,0.06) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* ── Page enter animation ── */
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(28px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.page-in {
+  animation: pageIn 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-up { opacity: 0; animation: fadeUp 0.5s ease forwards; }
+
+/* ── Logo float ── */
+@keyframes logoFloat {
+  0%, 100% { transform: translateY(0px) rotate(-1deg); }
+  50%       { transform: translateY(-8px) rotate(1deg); }
+}
+.logo-float { animation: logoFloat 4s ease-in-out infinite; }
+
+/* ── Button shimmer ── */
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+.btn-shimmer {
+  background: linear-gradient(90deg, var(--sky-dark) 0%, var(--sky) 40%, #67e8f9 60%, var(--sky-dark) 100%);
+  background-size: 200% auto;
+  animation: shimmer 3s linear infinite;
+}
+.btn-shimmer:hover { animation-duration: 1.2s; }
+
+/* ── Input focus ring ── */
+.input-field {
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+.input-field:focus {
+  outline: none;
+  border-color: var(--sky);
+  background: white;
+  box-shadow: 0 0 0 4px rgba(41,182,246,0.15);
+}
+
+/* ── Checkbox ── */
+.custom-checkbox { display: none; }
+.custom-checkbox + .check-box {
+  width: 18px; height: 18px;
+  border: 2px solid #cbd5e1;
+  border-radius: 5px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s; flex-shrink: 0; cursor: pointer;
+  background: white;
+}
+.custom-checkbox:checked + .check-box {
+  background: var(--sky);
+  border-color: var(--sky);
+}
+
+/* ── Left panel illustration dots ── */
+.dot-grid {
+  background-image: radial-gradient(circle, rgba(255,255,255,0.35) 1.5px, transparent 1.5px);
+  background-size: 22px 22px;
+}
+
+/* ── Divider ── */
+.divider-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, #cbd5e1, transparent);
+}
+
+/* ── Social button hover ── */
+.social-btn {
+  transition: all 0.2s;
+  border: 1.5px solid #e2e8f0;
+  background: white;
+}
+.social-btn:hover {
+  border-color: var(--sky);
+  box-shadow: 0 4px 16px rgba(41,182,246,0.18);
+  transform: translateY(-2px);
+}
