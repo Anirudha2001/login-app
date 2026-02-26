@@ -4,8 +4,21 @@ import { useEffect, useState } from 'react'
 import OTPPage from '@/components/OTPPage'
 import DashboardPage from '@/components/DashboardPage'
 import BookAppointment from '@/components/BookAppointment'
+import AppointmentsPage from '@/components/AppointmentsPage'
+import AppointmentDetailsPage from '@/components/AppointmentDetailsPage'
+import RescheduleAppointmentPage from '@/components/RescheduleAppointmentPage'
+import type { BottomNavKey } from '@/components/appointments/BottomNav'
+import type { Appointment } from '@/components/appointments/types'
+import { updateAppointmentStatuses } from '@/utils/appointmentLifecycle'
 
-type Page = 'login' | 'otp' | 'dashboard' | 'book'
+type Page =
+  | 'login'
+  | 'otp'
+  | 'dashboard'
+  | 'book'
+  | 'appointments'
+  | 'appointment-details'
+  | 'reschedule-appointment'
 type SlotBooking = { doctorId: number; dateKey: string; slot: string }
 
 type Doctor = {
@@ -20,13 +33,31 @@ const PAGE_TO_PATH: Record<Page, string> = {
   otp: '/otp',
   dashboard: '/dashboard',
   book: '/book',
+  appointments: '/appointments',
+  'appointment-details': '/appointment-details',
+  'reschedule-appointment': '/reschedule-appointment',
 }
 
 function getPageFromPath(pathname: string): Page {
   if (pathname === '/otp') return 'otp'
   if (pathname === '/dashboard') return 'dashboard'
   if (pathname === '/book') return 'book'
+  if (pathname === '/appointments') return 'appointments'
+  if (pathname === '/appointment-details') return 'appointment-details'
+  if (pathname === '/reschedule-appointment') return 'reschedule-appointment'
   return 'login'
+}
+
+function getFutureDateKey(daysAhead = 1): string {
+  const date = new Date()
+  date.setDate(date.getDate() + daysAhead)
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  return `${date.getFullYear()}-${month}-${day}`
+}
+
+function createAppointmentId(): string {
+  return `a-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
 }
 
 export default function App() {
@@ -39,6 +70,20 @@ export default function App() {
   const [loading, setLoading] = useState(false)
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null)
   const [bookingsByDoctor, setBookingsByDoctor] = useState<Record<number, Record<string, string[]>>>({})
+  const [appointments, setAppointments] = useState<Appointment[]>([
+    {
+      id: 'a1',
+      doctorId: 'd1',
+      doctorName: 'Dr. Kumar Das',
+      date: getFutureDateKey(1),
+      time: '12:30 PM',
+      tokenNo: 12,
+      paymentStatus: 'unpaid',
+      status: 'upcoming',
+    },
+  ])
+  const [selectedAppointmentId, setSelectedAppointmentId] = useState<string>('a1')
+  const [toastMessage, setToastMessage] = useState<string | null>(null)
 
   const navigateTo = (nextPage: Page, replace = false) => {
     setPage(nextPage)
@@ -62,6 +107,16 @@ export default function App() {
     }
     return () => window.removeEventListener('popstate', onPopState)
   }, [])
+
+  useEffect(() => {
+    setAppointments(prev => updateAppointmentStatuses(prev))
+  }, [appointments])
+
+  useEffect(() => {
+    if (!toastMessage) return
+    const timer = setTimeout(() => setToastMessage(null), 2400)
+    return () => clearTimeout(timer)
+  }, [toastMessage])
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -90,6 +145,72 @@ export default function App() {
         },
       }
     })
+
+    const doctorName =
+      selectedDoctor?.id === doctorId
+        ? selectedDoctor.name
+        : `Dr. ${doctorId}`
+
+    setAppointments(prev => {
+      const alreadyExists = prev.some(
+        appointment =>
+          appointment.doctorId === String(doctorId) &&
+          appointment.date === dateKey &&
+          appointment.time === slot &&
+          appointment.status !== 'canceled',
+      )
+      if (alreadyExists) return prev
+
+      const nextTokenNo = (prev.reduce((max, item) => Math.max(max, item.tokenNo), 0) || 0) + 1
+      return [
+        ...prev,
+        {
+          id: createAppointmentId(),
+          doctorId: String(doctorId),
+          doctorName,
+          date: dateKey,
+          time: slot,
+          tokenNo: nextTokenNo,
+          paymentStatus: 'unpaid',
+          status: 'upcoming',
+        },
+      ]
+    })
+  }
+
+  const handleBottomNav = (key: BottomNavKey) => {
+    if (key === 'find-doctor') navigateTo('dashboard')
+    if (key === 'appointments') navigateTo('appointments')
+  }
+
+  const refreshAppointmentLifecycle = () => {
+    setAppointments(prev => updateAppointmentStatuses(prev))
+  }
+
+  const selectedAppointment = appointments.find(item => item.id === selectedAppointmentId) ?? null
+
+  const handleMakePayment = (appointmentId: string) => {
+    setAppointments(prev => prev.map(item => {
+      if (item.id !== appointmentId || item.status !== 'upcoming') return item
+      return { ...item, paymentStatus: 'paid' }
+    }))
+  }
+
+  const handleReschedule = (next: { date: string; time: string }) => {
+    setAppointments(prev => prev.map(item => {
+      if (item.id !== selectedAppointmentId || item.status !== 'upcoming') return item
+      return { ...item, date: next.date, time: next.time, status: 'upcoming' }
+    }))
+    navigateTo('appointments')
+  }
+
+  const handleCancelAppointment = () => {
+    setAppointments(prev => prev.map(item => {
+      if (item.id !== selectedAppointmentId || item.status !== 'upcoming') return item
+      return { ...item, status: 'canceled' }
+    }))
+    setToastMessage('Appointment canceled successfully')
+    navigateTo('appointments')
   }
 
   if (page === 'otp') return (
@@ -101,7 +222,10 @@ export default function App() {
   )
 
   if (page === 'dashboard') return (
-    <DashboardPage onBookDoctor={handleBookDoctor} />
+    <DashboardPage
+      onBookDoctor={handleBookDoctor}
+      onOpenAppointments={() => navigateTo('appointments')}
+    />
   )
 
   if (page === 'book') return (
@@ -110,6 +234,45 @@ export default function App() {
       doctor={selectedDoctor ?? undefined}
       bookedSlots={bookingsByDoctor[selectedDoctor?.id ?? 1] ?? {}}
       onBook={handleBookSlot}
+    />
+  )
+
+  if (page === 'appointments') return (
+    <AppointmentsPage
+      appointments={appointments}
+      toastMessage={toastMessage}
+      onBack={() => navigateTo('dashboard')}
+      onOpenDetails={appointmentId => {
+        setSelectedAppointmentId(appointmentId)
+        navigateTo('appointment-details')
+      }}
+      onOpenReschedule={appointmentId => {
+        setSelectedAppointmentId(appointmentId)
+        navigateTo('reschedule-appointment')
+      }}
+      onMakePayment={handleMakePayment}
+      onRefreshLifecycle={refreshAppointmentLifecycle}
+      onNavigate={handleBottomNav}
+    />
+  )
+
+  if (page === 'appointment-details') return (
+    <AppointmentDetailsPage
+      appointment={selectedAppointment}
+      onBack={() => navigateTo('appointments')}
+      onOpenReschedule={() => navigateTo('reschedule-appointment')}
+      onCancelAppointment={handleCancelAppointment}
+      onMakePayment={() => selectedAppointment && handleMakePayment(selectedAppointment.id)}
+      onNavigate={handleBottomNav}
+    />
+  )
+
+  if (page === 'reschedule-appointment') return (
+    <RescheduleAppointmentPage
+      appointment={selectedAppointment}
+      onBack={() => navigateTo('appointments')}
+      onBooked={handleReschedule}
+      onNavigate={handleBottomNav}
     />
   )
 

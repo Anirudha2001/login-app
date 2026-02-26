@@ -20,9 +20,10 @@ const NAV = [
 
 interface DashboardProps {
   onBookDoctor?: (doc: { id: number; name: string; spec: string; color: string }) => void
+  onOpenAppointments?: () => void
 }
 
-export default function DashboardPage({ onBookDoctor }: DashboardProps) {
+export default function DashboardPage({ onBookDoctor, onOpenAppointments }: DashboardProps) {
   const [activeNav, setActiveNav] = useState(0)
   const [search, setSearch] = useState('')
   const [liked, setLiked] = useState<Set<number>>(new Set())
@@ -75,7 +76,10 @@ export default function DashboardPage({ onBookDoctor }: DashboardProps) {
           {NAV.map((item, i) => (
             <button
               key={item.label}
-              onClick={() => setActiveNav(i)}
+              onClick={() => {
+                setActiveNav(i)
+                if (item.label === 'Appointments') onOpenAppointments?.()
+              }}
               className={`nav-item w-full text-left ${activeNav === i ? 'active' : ''}`}
             >
               <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
