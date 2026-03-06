@@ -8,6 +8,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+      {/* Navigation */}
       <nav className="bg-white shadow-sm sticky top-0 z-50">
         <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
           <div className="text-2xl font-bold text-blue-600">MedBooking</div>
@@ -40,13 +41,13 @@ export default function Home() {
         <div className="flex gap-4 justify-center mb-16">
           <button
             onClick={() => router.push('/login')}
-            className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold flex items-center gap-2"
+            className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold flex items-center gap-2 transition transform hover:scale-105"
           >
             Book Appointment <FiArrowRight />
           </button>
           <button
             onClick={() => router.push('/signup')}
-            className="px-8 py-3 border-2 border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 font-semibold"
+            className="px-8 py-3 border-2 border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 font-semibold transition"
           >
             Create Account
           </button>
@@ -79,20 +80,21 @@ export default function Home() {
         </div>
       </div>
 
+      {/* Demo Credentials */}
       <div className="bg-white rounded-lg shadow-md max-w-2xl mx-auto my-16 p-8">
         <h3 className="text-xl font-bold text-gray-900 mb-4">Demo Credentials</h3>
         <div className="space-y-4">
           <div>
             <p className="font-semibold text-gray-700">Patient Login</p>
-            <p className="text-gray-600 text-sm">Email: any email (test@example.com)</p>
+            <p className="text-gray-600 text-sm">Email: arjun@example.com (use any email)</p>
           </div>
           <div>
             <p className="font-semibold text-gray-700">Doctor Login</p>
-            <p className="text-gray-600 text-sm">Doctor IDs: DOC001-DOC005</p>
+            <p className="text-gray-600 text-sm">Doctor IDs: DOC001, DOC002, DOC003, etc.</p>
           </div>
           <div>
-            <p className="font-semibold text-gray-700">OTP</p>
-            <p className="text-gray-600 text-sm">Any 6-digit code (123456)</p>
+            <p className="font-semibold text-gray-700">OTP Verification</p>
+            <p className="text-gray-600 text-sm">Use any 6-digit code (e.g., 123456)</p>
           </div>
         </div>
       </div>
