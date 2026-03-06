@@ -1,0 +1,120 @@
+{
+  "doctors": [
+    {
+      "id": "DOC001",
+      "name": "Dr. Sarah Johnson",
+      "specialty": "Cardiology",
+      "qualification": "MBBS, MD Cardiology",
+      "experience": 12,
+      "consultationFee": 500,
+      "rating": 4.8,
+      "totalReviews": 245,
+      "availabilityDays": ["Mon", "Tue", "Wed", "Thu", "Fri"],
+      "availabilityHours": {
+        "start": "09:00",
+        "end": "17:00"
+      },
+      "slotDurationMinutes": 30,
+      "bio": "Expert cardiologist with 12 years of experience in treating heart conditions.",
+      "languages": ["English", "Hindi"],
+      "clinic": "Heart Care Center",
+      "phone": "+91-9876543210"
+    },
+    {
+      "id": "DOC002",
+      "name": "Dr. Rajesh Kumar",
+      "specialty": "Neurology",
+      "qualification": "MBBS, MD Neurology, DM",
+      "experience": 15,
+      "consultationFee": 600,
+      "rating": 4.9,
+      "totalReviews": 312,
+      "availabilityDays": ["Mon", "Tue", "Wed", "Fri", "Sat"],
+      "availabilityHours": {
+        "start": "10:00",
+        "end": "18:00"
+      },
+      "slotDurationMinutes": 30,
+      "bio": "Leading neurologist specializing in neurological disorders and brain health.",
+      "languages": ["English", "Hindi", "Tamil"],
+      "clinic": "Neural Care Institute",
+      "phone": "+91-9876543211"
+    },
+    {
+      "id": "DOC003",
+      "name": "Dr. Priya Sharma",
+      "specialty": "Dermatology",
+      "qualification": "MBBS, MD Dermatology",
+      "experience": 8,
+      "consultationFee": 400,
+      "rating": 4.7,
+      "totalReviews": 189,
+      "availabilityDays": ["Tue", "Wed", "Thu", "Fri", "Sat"],
+      "availabilityHours": {
+        "start": "09:00",
+        "end": "16:00"
+      },
+      "slotDurationMinutes": 20,
+      "bio": "Specialized in treating skin conditions and aesthetic dermatology.",
+      "languages": ["English", "Hindi"],
+      "clinic": "Skin Wellness Clinic",
+      "phone": "+91-9876543212"
+    },
+    {
+      "id": "DOC004",
+      "name": "Dr. Amit Patel",
+      "specialty": "Orthopedics",
+      "qualification": "MBBS, MS Orthopedics",
+      "experience": 10,
+      "consultationFee": 550,
+      "rating": 4.6,
+      "totalReviews": 156,
+      "availabilityDays": ["Mon", "Wed", "Thu", "Fri"],
+      "availabilityHours": {
+        "start": "08:00",
+        "end": "16:00"
+      },
+      "slotDurationMinutes": 30,
+      "bio": "Expert orthopedic surgeon with focus on joint and bone health.",
+      "languages": ["English", "Gujarati", "Hindi"],
+      "clinic": "Bone & Joint Center",
+      "phone": "+91-9876543213"
+    },
+    {
+      "id": "DOC005",
+      "name": "Dr. Neha Gupta",
+      "specialty": "Pediatrics",
+      "qualification": "MBBS, MD Pediatrics",
+      "experience": 9,
+      "consultationFee": 350,
+      "rating": 4.8,
+      "totalReviews": 267,
+      "availabilityDays": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+      "availabilityHours": {
+        "start": "09:00",
+        "end": "17:00"
+      },
+      "slotDurationMinutes": 20,
+      "bio": "Compassionate pediatrician dedicated to child health and wellness.",
+      "languages": ["English", "Hindi"],
+      "clinic": "Kids Health Clinic",
+      "phone": "+91-9876543214"
+    }
+  ],
+  "patients": [
+    {
+      "firstName": "Arjun",
+      "lastName": "Verma",
+      "email": "arjun@example.com",
+      "phone": "9876543215",
+      "password": "password123"
+    },
+    {
+      "firstName": "Priya",
+      "lastName": "Singh",
+      "email": "priya@example.com",
+      "phone": "9876543216",
+      "password": "password123"
+    }
+  ]
+}
